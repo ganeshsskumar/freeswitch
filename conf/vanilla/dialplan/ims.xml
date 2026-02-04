@@ -1,0 +1,58 @@
+<include>
+  <context name="ims">
+
+    <!-- ========== DEBUG (optional) ========== -->
+    <extension name="ims-debug" continue="true">
+      <condition field="${call_debug}" expression="^true$">
+        <action application="info"/>
+      </condition>
+    </extension>
+
+    <!-- ========== BUSY TEST ========== -->
+    <!-- Dial 9999 -->
+    <extension name="tas-busy">
+      <condition field="destination_number" expression="^9999$">
+        <action application="busy"/>
+      </condition>
+    </extension>
+
+    <!-- ========== CONFERENCE ========== -->
+    <!-- Dial 2000 -->
+    <extension name="tas-conference">
+      <condition field="destination_number" expression="^2000$">
+        <action application="conference" data="imsconf@default"/>
+      </condition>
+    </extension>
+
+    <!-- ========== ANNOUNCEMENT / IVR TEST ========== -->
+    <!-- Dial 3000 -->
+    <extension name="tas-announcement">
+      <condition field="destination_number" expression="^3000$">
+        <action application="answer"/>
+        <action application="playback" data="ivr/ivr-welcome.wav"/>
+        <action application="hangup"/>
+      </condition>
+    </extension>
+
+    <!-- ========== RINGBACK TONE ========== -->
+    <!-- Any 10-digit number -->
+    <extension name="tas-ringback">
+      <condition field="destination_number" expression="^[0-9]{10}$">
+        <action application="ring_ready"/>
+        <action application="sleep" data="3000"/>
+        <action application="answer"/>
+      </condition>
+    </extension>
+
+    <!-- ========== NO ANSWER / VOICEMAIL ========== -->
+    <!-- Fallback if nothing matched -->
+    <extension name="tas-voicemail">
+      <condition field="destination_number" expression="^.+$">
+        <action application="answer"/>
+        <action application="playback" data="voicemail/8000/vm-unavail.wav"/>
+        <action application="hangup"/>
+      </condition>
+    </extension>
+
+  </context>
+</include>
